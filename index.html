@@ -194,6 +194,7 @@
 
   .item-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .item-price { color: var(--gold); font-weight: 600; font-size: .95rem; }
+  .item-size-note { color: rgba(255,255,255,.4); font-weight: 400; font-size: .78rem; }
 
   .add-btn {
     background: var(--gold); color: var(--dark);
@@ -341,7 +342,8 @@
   }
   nav.with-bar { top: 38px; }
   nav.scrolled { background: rgba(15,12,7,.95); backdrop-filter: blur(12px); padding: 12px 40px; box-shadow: 0 2px 20px rgba(0,0,0,.5); }
-  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--gold); }
+  .nav-logo { height: 34px; display: flex; align-items: center; }
+  .nav-logo img { height: 100%; width: auto; display: block; }
   .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
   .nav-links a { color: rgba(255,255,255,.65); text-decoration: none; font-size: .85rem; transition: color .2s; }
   .nav-links a:hover { color: var(--gold); }
@@ -366,637 +368,59 @@
   .open-dot { width: 8px; height: 8px; border-radius: 50%; background: #5de08a; animation: blink 1.6s ease-in-out infinite; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-  /* toast */
-  #toast {
-    position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
-    background: var(--green); color: #fff; padding: 12px 24px; border-radius: 50px;
-    font-size: .85rem; font-weight: 600; z-index: 1000;
-    opacity: 0; pointer-events: none; transition: opacity .3s, transform .3s;
-    box-shadow: 0 10px 30px rgba(0,0,0,.4);
+  /* ── CHECKOUT PAGE ── */
+  #checkoutOverlay {
+    position: fixed; inset: 0; background: var(--dark);
+    z-index: 1500; overflow-y: auto;
+    transform: translateX(100%); transition: transform .4s cubic-bezier(.4,0,.2,1);
   }
-  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  #checkoutOverlay.show { transform: translateX(0); }
 
-  /* ── ORDER TYPE / LOCATION MODAL ── */
-  #setupOverlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,.75);
-    z-index: 2000; display: flex; align-items: center; justify-content: center;
-    padding: 20px; backdrop-filter: blur(4px);
-    opacity: 1; transition: opacity .35s; 
-  }
-  #setupOverlay.hidden { opacity: 0; pointer-events: none; }
+  .checkout-page { max-width: 560px; margin: 0 auto; padding: 90px 24px 60px; }
 
-  #setupModal {
-    background: #19140b; border: 1px solid rgba(201,168,76,.2);
-    border-radius: 24px; width: 100%; max-width: 420px;
-    padding: 38px 30px 32px; text-align: center;
-    box-shadow: 0 30px 80px rgba(0,0,0,.6);
-    animation: modal-in .4s cubic-bezier(.4,0,.2,1) both;
-  }
-  @keyframes modal-in { from { opacity: 0; transform: scale(.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+  .checkout-crumbs { font-size: .8rem; color: rgba(255,255,255,.4); margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
+  .checkout-crumbs span.current { color: var(--gold); font-weight: 600; }
+  .checkout-back { background: none; border: none; color: var(--gold); font-size: .85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; margin-bottom: 18px; padding: 0; }
 
-  .setup-logo {
-    width: 86px; height: 86px; border-radius: 18px; margin: 0 auto 20px;
-    background: linear-gradient(135deg, var(--gold), #8a6f2a);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--dark);
-    box-shadow: 0 10px 30px rgba(201,168,76,.25);
+  .checkout-section {
+    background: linear-gradient(145deg, var(--panel), var(--panel2));
+    border: 1px solid rgba(201,168,76,.12);
+    border-radius: 18px; padding: 26px 24px; margin-bottom: 20px;
   }
 
-  .setup-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 24px; }
+  .checkout-label { font-size: .82rem; color: rgba(255,255,255,.7); font-weight: 600; margin-bottom: 8px; display: block; }
+  .checkout-input {
+    width: 100%; padding: 13px 16px; border-radius: 12px; margin-bottom: 20px;
+    background: rgba(255,255,255,.04); border: 1.5px solid rgba(255,255,255,.12);
+    color: var(--cream); font-size: .9rem; font-family: 'Poppins', sans-serif;
+  }
+  .checkout-input:focus { outline: none; border-color: var(--gold); }
+  .checkout-input::placeholder { color: rgba(255,255,255,.3); }
+  .checkout-input:last-child { margin-bottom: 0; }
 
-  .order-type-row { display: flex; gap: 10px; margin-bottom: 26px; }
-  .order-type-btn {
-    flex: 1; padding: 13px 0; border-radius: 50px; border: 1.5px solid rgba(201,168,76,.3);
-    background: transparent; color: rgba(255,255,255,.65); font-weight: 600; font-size: .9rem;
+  .phone-input-row { display: flex; gap: 8px; margin-bottom: 20px; }
+  .phone-prefix {
+    padding: 13px 14px; border-radius: 12px; background: rgba(255,255,255,.04);
+    border: 1.5px solid rgba(255,255,255,.12); color: var(--cream); font-size: .9rem; flex-shrink: 0;
+  }
+  .phone-input-row .checkout-input { margin-bottom: 0; flex-grow: 1; }
+
+  .order-type-toggle { display: flex; gap: 10px; margin-bottom: 4px; }
+  .order-type-toggle button {
+    flex: 1; padding: 12px 0; border-radius: 12px; border: 1.5px solid rgba(201,168,76,.3);
+    background: transparent; color: rgba(255,255,255,.6); font-weight: 600; font-size: .85rem;
     cursor: pointer; transition: all .2s; font-family: 'Poppins', sans-serif;
   }
-  .order-type-btn.active { background: var(--gold); color: var(--dark); border-color: var(--gold); }
+  .order-type-toggle button.active { background: var(--gold); color: var(--dark); border-color: var(--gold); }
 
-  .setup-divider-text {
-    font-size: .8rem; color: rgba(255,255,255,.4); margin-bottom: 16px;
-    text-align: left; font-weight: 600;
-  }
-
-  .use-location-btn {
-    width: 100%; padding: 13px; border-radius: 50px;
-    background: rgba(201,168,76,.1); border: 1.5px solid rgba(201,168,76,.3);
-    color: var(--gold); font-size: .88rem; font-weight: 600; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    margin-bottom: 22px; transition: background .2s; font-family: 'Poppins', sans-serif;
-  }
-  .use-location-btn:hover { background: rgba(201,168,76,.18); }
-
-  .setup-field-label { font-size: .82rem; font-weight: 600; text-align: left; margin-bottom: 8px; color: rgba(255,255,255,.8); }
-  .setup-select {
-    width: 100%; padding: 13px 16px; border-radius: 14px; margin-bottom: 18px;
+  .checkout-textarea {
+    width: 100%; min-height: 90px; padding: 13px 16px; border-radius: 12px;
     background: rgba(255,255,255,.04); border: 1.5px solid rgba(255,255,255,.12);
-    color: var(--cream); font-size: .88rem; font-family: 'Poppins', sans-serif;
-    appearance: none; cursor: pointer;
+    color: var(--cream); font-size: .88rem; font-family: 'Poppins', sans-serif; resize: vertical;
   }
-  .setup-select:focus { outline: none; border-color: var(--gold); }
-
-  .setup-confirm-btn {
-    width: 100%; padding: 15px; border-radius: 50px; border: none;
-    background: var(--gold); color: var(--dark); font-weight: 700; font-size: .92rem;
-    cursor: pointer; transition: opacity .2s, transform .2s; font-family: 'Poppins', sans-serif;
-  }
-  .setup-confirm-btn:disabled { opacity: .35; cursor: not-allowed; }
-  .setup-confirm-btn:not(:disabled):hover { transform: translateY(-2px); }
-
-  /* ── LOCATION BAR (replaces top of nav once set) ── */
-  #locationBar {
-    display: none;
-    background: var(--gold); color: var(--dark);
-    padding: 10px 40px; font-size: .82rem;
-    align-items: center; justify-content: space-between;
-    position: fixed; top: 0; left: 0; right: 0; z-index: 998;
-  }
-  #locationBar.show { display: flex; }
-  #locationBar .lb-left { display: flex; align-items: center; gap: 8px; font-weight: 600; }
-  #locationBar .lb-change { text-decoration: underline; cursor: pointer; font-weight: 700; background: none; border: none; color: var(--dark); font-family: 'Poppins', sans-serif; font-size: .8rem; }
-  @media (max-width: 600px) { #locationBar { padding: 10px 16px; font-size: .75rem; } }
-</style>
-</head>
-<body>
-
-<!-- LOCATION BAR -->
-<div id="locationBar">
-  <div class="lb-left">📍 <span id="lbText">Delivery to Darvesh, Haripur</span></div>
-  <button class="lb-change" onclick="openSetup()">Change</button>
-</div>
-
-<!-- ORDER TYPE / LOCATION SETUP MODAL -->
-<div id="setupOverlay">
-  <div id="setupModal">
-    <div class="setup-logo">B</div>
-    <div class="setup-title">Select your order type</div>
-
-    <div class="order-type-row">
-      <button class="order-type-btn active" id="typeDelivery" onclick="setOrderType('delivery')">Delivery</button>
-      <button class="order-type-btn" id="typePickup" onclick="setOrderType('pickup')">Pick-Up</button>
-    </div>
-
-    <div class="setup-divider-text">Please select your location</div>
-
-    <button class="use-location-btn" onclick="useCurrentLocation()">📍 Use Current Location</button>
-
-    <div class="setup-field-label">Select City / Region</div>
-    <select class="setup-select" id="setupCity">
-      <option value="">Select City / Region</option>
-      <option value="Haripur">Haripur</option>
-      <option value="Abbottabad">Abbottabad</option>
-    </select>
-
-    <div class="setup-field-label">Select Area / Sub Region</div>
-    <select class="setup-select" id="setupArea">
-      <option value="">Select Area / Sub Region</option>
-      <option value="Darvesh">Darvesh</option>
-      <option value="Sabzi Mandi">Sabzi Mandi</option>
-      <option value="Nishat Mandi Mor">Nishat Mandi Mor</option>
-      <option value="Main GT Road">Main GT Road</option>
-    </select>
-
-    <button class="setup-confirm-btn" id="setupConfirmBtn" disabled onclick="confirmSetup()">Select</button>
-  </div>
-</div>
-
-<nav id="navbar">
-  <div class="nav-logo">Bella's</div>
-  <ul class="nav-links">
-    <li><a href="#highlights">About</a></li>
-    <li><a href="#menu">Menu</a></li>
-    <li><a href="#reviews">Reviews</a></li>
-    <li><a href="#info">Visit Us</a></li>
-    <li>
-      <button class="nav-cart-btn" onclick="openCart()">
-        🛒 Cart <span class="nc-count" id="navCartCount">0</span>
-      </button>
-    </li>
-  </ul>
-</nav>
-
-<!-- HERO -->
-<div id="hero">
-  <div class="hero-badge">Est. in Haripur · Pakistan</div>
-  <h1 class="hero-title">Bella's</h1>
-  <p class="hero-sub">Where Every Bite Tells a Story</p>
-  <div class="open-badge"><div class="open-dot"></div> Open Now · Closes 1 AM</div>
-  <div class="stars">★★★★★</div>
-  <div class="rating-line">4.4 · 287 Reviews on Google Maps</div>
-  <div class="cta-row">
-    <a href="#menu" class="btn btn-primary">🍽️ Order Now</a>
-    <a href="tel:+923361131166" class="btn btn-outline">📞 Call to Reserve</a>
-  </div>
-  <div class="scroll-hint">
-    <div class="scroll-line"></div>
-    scroll
-  </div>
-</div>
-
-<!-- HIGHLIGHTS -->
-<div class="divider"></div>
-<section id="highlights">
-  <div class="section-label">Why Bella's</div>
-  <h2 class="section-title">A Dining Experience<br>Like No Other</h2>
-  <div class="highlights-grid">
-    <div class="highlight-card">
-      <div class="card-icon">🥩</div>
-      <div class="card-title">Signature Beef Steaks</div>
-      <div class="card-text">Juicy, tender, and cooked to perfection — our steaks keep guests coming back again and again.</div>
-    </div>
-    <div class="highlight-card">
-      <div class="card-icon">🍕</div>
-      <div class="card-title">Artisan Pizzas</div>
-      <div class="card-text">Hand-crafted with fresh ingredients and baked to golden perfection every single time.</div>
-    </div>
-    <div class="highlight-card">
-      <div class="card-icon">🌟</div>
-      <div class="card-title">5-Star Service</div>
-      <div class="card-text">Our team goes above and beyond — professional, warm, and dedicated to your satisfaction.</div>
-    </div>
-    <div class="highlight-card">
-      <div class="card-icon">✨</div>
-      <div class="card-title">Stunning Ambience</div>
-      <div class="card-text">A beautifully designed space that makes every occasion feel special and memorable.</div>
-    </div>
-  </div>
-</section>
-
-<!-- MENU / ORDERING -->
-<div class="divider"></div>
-<section id="menu">
-  <div class="section-label">Order Online</div>
-  <h2 class="section-title">Our Menu</h2>
-
-  <div class="menu-tabs" id="menuTabs">
-    <button class="tab-btn active" data-cat="all">All</button>
-    <button class="tab-btn" data-cat="steaks">Steaks</button>
-    <button class="tab-btn" data-cat="pizza">Pizza</button>
-    <button class="tab-btn" data-cat="pasta">Pasta</button>
-    <button class="tab-btn" data-cat="sides">Sides & More</button>
-  </div>
-
-  <div class="menu-grid" id="menuGrid"></div>
-</section>
-
-<!-- REVIEWS -->
-<div class="divider"></div>
-<section id="reviews">
-  <div class="section-label">What People Say</div>
-  <h2 class="section-title">Guest Reviews</h2>
-
-  <div class="reviews-track" id="reviewsTrack">
-    <div class="review-slide">
-      <div class="rev-stars">★★★★★</div>
-      <p class="rev-text">"The beef steaks were cooked to perfection — juicy, tender, and full of flavor. I also tried their pizza, wings, and pasta, and each dish was delicious in its own right. The ambiance was great too!"</p>
-      <div class="rev-author">Tahir Mehmood</div>
-      <div class="rev-date">3 months ago · Local Guide</div>
-    </div>
-    <div class="review-slide">
-      <div class="rev-stars">★★★★★</div>
-      <p class="rev-text">"Food was amazing — overall management was too good. Literally love it! Will definitely be coming back with the whole family."</p>
-      <div class="rev-author">Arjumand Bahadur</div>
-      <div class="rev-date">2 months ago</div>
-    </div>
-    <div class="review-slide">
-      <div class="rev-stars">★★★★★</div>
-      <p class="rev-text">"Ambience was too good and food was so yummy. Service is also 10/10. Thank you Hassan — you made our evening perfect!"</p>
-      <div class="rev-author">Sardar Rasheed</div>
-      <div class="rev-date">1 month ago</div>
-    </div>
-    <div class="review-slide">
-      <div class="rev-stars">★★★★★</div>
-      <p class="rev-text">"The owner Arsalan Shah handled a concern so professionally — apologized personally, offered a discount, replaced the dish, and treated us to complimentary ice cream. Dedication to customers is unmatched!"</p>
-      <div class="rev-author">Verified Guest</div>
-      <div class="rev-date">3 weeks ago</div>
-    </div>
-  </div>
-
-  <div class="reviews-nav" id="reviewsNav"></div>
-</section>
-
-<!-- INFO -->
-<div class="divider"></div>
-<section style="max-width:1100px;margin:0 auto;padding:100px 24px;">
-  <div id="info">
-    <div>
-      <div class="section-label">Find Us</div>
-      <h2 class="section-title" style="margin-bottom:40px;">Visit Bella's</h2>
-
-      <div class="info-row">
-        <div class="info-icon">📍</div>
-        <div>
-          <div class="info-label">Address</div>
-          <div class="info-value">Akthar Nawaz Khan Plaza, Main GT Road<br>Near Sabzi Mandi, Opp. Nishat Mandi Mor<br>Darvesh, Haripur 22600, Pakistan</div>
-        </div>
-      </div>
-
-      <div class="info-row">
-        <div class="info-icon">🕐</div>
-        <div>
-          <div class="info-label">Hours</div>
-          <div class="info-value">Open Daily · Closes 1:00 AM</div>
-        </div>
-      </div>
-
-      <div class="info-row">
-        <div class="info-icon">📞</div>
-        <div>
-          <div class="info-label">Phone</div>
-          <div class="info-value"><a href="tel:+923361131166" style="color:var(--gold);text-decoration:none;">+92 336 113 1166</a></div>
-        </div>
-      </div>
-
-      <div class="info-row">
-        <div class="info-icon">🛵</div>
-        <div>
-          <div class="info-label">Order Online</div>
-          <div class="info-value"><a href="https://foodpanda.pk" target="_blank" style="color:var(--gold);text-decoration:none;">foodpanda.pk</a> or use the cart above 👆</div>
-        </div>
-      </div>
-
-      <div class="info-row">
-        <div class="info-icon">🍽️</div>
-        <div>
-          <div class="info-label">Options</div>
-          <div class="info-value">Dine-in · Drive-Through · No-Contact Delivery</div>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <a class="map-placeholder" href="https://maps.google.com/?q=Bella's+Restaurant+Haripur+Pakistan" target="_blank">
-        <span>🗺️</span>
-        <span>Open in Google Maps</span>
-        <span style="font-size:.75rem;opacity:.6;">XWWF+3R · Haripur, Pakistan</span>
-      </a>
-      <div style="margin-top:24px;background:linear-gradient(135deg,var(--panel),var(--panel2));border:1px solid rgba(201,168,76,.15);border-radius:16px;padding:28px 24px;text-align:center;">
-        <div style="font-size:2rem;margin-bottom:10px;">⭐ 4.4</div>
-        <div style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:6px;">287 Google Reviews</div>
-        <div style="font-size:.8rem;color:rgba(255,255,255,.45);">Price range: Rs 1 – 4,000 per person</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <strong>Bella's</strong><br><br>
-  Haripur's Finest Dining Experience<br>
-  <span style="margin-top:8px;display:inline-block;">© 2025 Bella's Restaurant. All rights reserved.</span>
-</footer>
-
-<!-- FLOATING CART BUTTON -->
-<button id="cartFab" onclick="openCart()">
-  <div class="fab-icon">🛒<span class="fab-count" id="fabCount">0</span></div>
-  <div class="fab-text">View Cart</div>
-  <div class="fab-total" id="fabTotal">Rs 0</div>
-</button>
-
-<!-- CART OVERLAY + DRAWER -->
-<div id="cartOverlay" onclick="closeCart()"></div>
-<div id="cartDrawer">
-  <div class="cart-header">
-    <h3>Your Order</h3>
-    <button class="cart-close" onclick="closeCart()">✕</button>
-  </div>
-  <div class="cart-body" id="cartBody"></div>
-  <div class="cart-footer" id="cartFooter"></div>
-</div>
-
-<div id="toast"></div>
-
-<script>
-  // ── MENU DATA ──
-  const MENU = [
-    { id:'steak1', name:"Classic Beef Steak", desc:"Perfectly seasoned and grilled to your liking. A Bella's signature.", cat:'steaks', price:1200, img:"https://images.unsplash.com/photo-1546964124-0cce460f38ef?w=500&h=400&fit=crop&q=80" },
-    { id:'steak2', name:"Sizzling Pepper Steak", desc:"Bold peppercorn crust, served on a sizzling cast-iron plate.", cat:'steaks', price:1400, img:"https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=500&h=400&fit=crop&q=80" },
-    { id:'pizza1', name:"BBQ Chicken Pizza", desc:"Smoky BBQ sauce, grilled chicken, and melted mozzarella.", cat:'pizza', price:800, img:"https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500&h=400&fit=crop&q=80" },
-    { id:'pizza2', name:"Loaded Cheese Pizza", desc:"Four-cheese blend on a crispy artisan base. Pure indulgence.", cat:'pizza', price:750, img:"https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=500&h=400&fit=crop&q=80" },
-    { id:'pasta1', name:"Creamy Alfredo Pasta", desc:"Silky cream sauce, parmesan, and fresh herbs tossed with fettuccine.", cat:'pasta', price:600, img:"https://images.unsplash.com/photo-1645112411341-6c4fd023714a?w=500&h=400&fit=crop&q=80" },
-    { id:'pasta2', name:"Arabiata Pasta", desc:"Spicy tomato base with garlic and fresh basil. Bold and satisfying.", cat:'pasta', price:550, img:"https://images.unsplash.com/photo-1572441713132-51c75654db73?w=500&h=400&fit=crop&q=80" },
-    { id:'side1', name:"Loaded Fries", desc:"Crispy fries topped with cheese, jalapeños, and signature sauce.", cat:'sides', price:350, img:"https://images.unsplash.com/photo-1585109649139-366815a0d713?w=500&h=400&fit=crop&q=80" },
-    { id:'side2', name:"Crispy Wings", desc:"Golden fried wings tossed in your choice of buffalo or honey garlic.", cat:'sides', price:650, img:"https://images.unsplash.com/photo-1608039755401-742074f0548d?w=500&h=400&fit=crop&q=80" },
-    { id:'side3', name:"Vanilla Ice Cream", desc:"A sweet, creamy scoop — the perfect way to end your meal.", cat:'sides', price:250, img:"https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=500&h=400&fit=crop&q=80" },
-  ];
-
-  const RESTAURANT_WHATSAPP = "923361131166"; // no + or spaces, used for wa.me link
-
-  // ── CART STATE (in-memory only) ──
-  let cart = {}; // { id: qty }
-
-  function fmt(n) { return 'Rs ' + n.toLocaleString(); }
-
-  function renderMenu(filterCat) {
-    const grid = document.getElementById('menuGrid');
-    grid.innerHTML = '';
-    MENU.forEach(item => {
-      const show = filterCat === 'all' || item.cat === filterCat;
-      const card = document.createElement('div');
-      card.className = 'menu-item' + (show ? ' show' : '');
-      card.dataset.cat = item.cat;
-      card.id = 'card-' + item.id;
-      card.innerHTML = `
-        <div class="item-photo-wrap"><img src="${item.img}" alt="${item.name}" loading="lazy"></div>
-        <div class="item-body">
-          <div class="item-name">${item.name}</div>
-          <div class="item-desc">${item.desc}</div>
-          <div class="item-footer">
-            <div class="item-price">${fmt(item.price)}</div>
-            <div id="ctrl-${item.id}"></div>
-          </div>
-        </div>
-      `;
-      grid.appendChild(card);
-      renderItemControl(item.id);
-    });
-  }
-
-  function renderItemControl(id) {
-    const el = document.getElementById('ctrl-' + id);
-    if (!el) return;
-    const qty = cart[id] || 0;
-    if (qty === 0) {
-      el.innerHTML = `<button class="add-btn" onclick="addToCart('${id}')">+ Add</button>`;
-    } else {
-      el.innerHTML = `
-        <div class="qty-stepper">
-          <button onclick="changeQty('${id}', -1)">−</button>
-          <span>${qty}</span>
-          <button onclick="changeQty('${id}', 1)">+</button>
-        </div>
-      `;
-    }
-  }
-
-  function addToCart(id) {
-    cart[id] = (cart[id] || 0) + 1;
-    renderItemControl(id);
-    updateCartUI();
-    const item = MENU.find(m => m.id === id);
-    showToast(`${item.name} added to cart`);
-  }
-
-  function changeQty(id, delta) {
-    cart[id] = (cart[id] || 0) + delta;
-    if (cart[id] <= 0) delete cart[id];
-    renderItemControl(id);
-    updateCartUI();
-    renderCartDrawer();
-  }
-
-  function removeFromCart(id) {
-    delete cart[id];
-    renderItemControl(id);
-    updateCartUI();
-    renderCartDrawer();
-  }
-
-  function cartCount() { return Object.values(cart).reduce((a,b) => a+b, 0); }
-  function cartTotal() {
-    return Object.entries(cart).reduce((sum, [id, qty]) => {
-      const item = MENU.find(m => m.id === id);
-      return sum + (item ? item.price * qty : 0);
-    }, 0);
-  }
-
-  function updateCartUI() {
-    const count = cartCount();
-    const total = cartTotal();
-    document.getElementById('fabCount').textContent = count;
-    document.getElementById('fabTotal').textContent = fmt(total);
-    document.getElementById('navCartCount').textContent = count;
-    document.getElementById('cartFab').classList.toggle('show', count > 0);
-  }
-
-  function renderCartDrawer() {
-    const body = document.getElementById('cartBody');
-    const footer = document.getElementById('cartFooter');
-    const entries = Object.entries(cart);
-
-    if (entries.length === 0) {
-      body.innerHTML = `<div class="cart-empty"><div class="big">🛒</div>Your cart is empty<br>Add something delicious!</div>`;
-      footer.innerHTML = '';
-      return;
-    }
-
-    body.innerHTML = entries.map(([id, qty]) => {
-      const item = MENU.find(m => m.id === id);
-      return `
-        <div class="cart-line">
-          <img src="${item.img}" alt="${item.name}">
-          <div class="cart-line-info">
-            <div class="cart-line-name">${item.name}</div>
-            <div class="cart-line-price">${qty} × ${fmt(item.price)} = ${fmt(item.price*qty)}</div>
-            <button class="cart-line-remove" onclick="removeFromCart('${id}')">Remove</button>
-          </div>
-          <div class="qty-stepper">
-            <button onclick="changeQty('${id}', -1)">−</button>
-            <span>${qty}</span>
-            <button onclick="changeQty('${id}', 1)">+</button>
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    const total = cartTotal();
-    footer.innerHTML = `
-      <div class="cart-totals-row"><span>Subtotal</span><span>${fmt(total)}</span></div>
-      <div class="cart-totals-row grand"><span>Total</span><span>${fmt(total)}</span></div>
-      <button class="checkout-btn" onclick="checkout()">Checkout via WhatsApp →</button>
-      <div class="cart-note">Delivery, payment & exact total confirmed by our staff on WhatsApp. No online payment is processed here.</div>
-    `;
-  }
-
-  function checkout() {
-    const entries = Object.entries(cart);
-    if (entries.length === 0) return;
-    const lines = ["Hi Bellas! I would like to place an order:", ""];
-    entries.forEach(([id, qty]) => {
-      const item = MENU.find(m => m.id === id);
-      lines.push("- " + item.name + " x" + qty + " - " + fmt(item.price * qty));
-    });
-    lines.push("");
-    lines.push("Total: " + fmt(cartTotal()));
-    lines.push("");
-    lines.push("Please confirm delivery/pickup details. Thank you!");
-    const msg = lines.join("\n");
-    const url = "https://wa.me/" + RESTAURANT_WHATSAPP + "?text=" + encodeURIComponent(msg);
-    window.open(url, '_blank');
-  }
-
-  function openCart() {
-    renderCartDrawer();
-    document.getElementById('cartDrawer').classList.add('show');
-    document.getElementById('cartOverlay').classList.add('show');
-  }
-  function closeCart() {
-    document.getElementById('cartDrawer').classList.remove('show');
-    document.getElementById('cartOverlay').classList.remove('show');
-  }
-
-  let toastTimer;
-  function showToast(text) {
-    const t = document.getElementById('toast');
-    t.textContent = text;
-    t.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
-  }
-
-  // ── ORDER TYPE / LOCATION SETUP ──
-  let orderType = 'delivery';
-
-  function setOrderType(type) {
-    orderType = type;
-    document.getElementById('typeDelivery').classList.toggle('active', type === 'delivery');
-    document.getElementById('typePickup').classList.toggle('active', type === 'pickup');
-  }
-
-  function checkSetupValid() {
-    const city = document.getElementById('setupCity').value;
-    const area = document.getElementById('setupArea').value;
-    document.getElementById('setupConfirmBtn').disabled = !(city && area);
-  }
-  document.getElementById('setupCity').addEventListener('change', checkSetupValid);
-  document.getElementById('setupArea').addEventListener('change', checkSetupValid);
-
-  function useCurrentLocation() {
-    document.getElementById('setupCity').value = 'Haripur';
-    document.getElementById('setupArea').value = 'Darvesh';
-    checkSetupValid();
-    showToast('Location detected: Darvesh, Haripur');
-  }
-
-  function confirmSetup() {
-    const city = document.getElementById('setupCity').value;
-    const area = document.getElementById('setupArea').value;
-    if (!city || !area) return;
-
-    const label = orderType === 'delivery'
-      ? `Delivery to ${area}, ${city}`
-      : `Pick-Up from ${area}, ${city}`;
-    document.getElementById('lbText').textContent = label;
-    document.getElementById('locationBar').classList.add('show');
-    document.getElementById('navbar').classList.add('with-bar');
-    document.getElementById('setupOverlay').classList.add('hidden');
-  }
-
-  function openSetup() {
-    document.getElementById('setupOverlay').classList.remove('hidden');
-  }
-
-  // ── INIT MENU ──
-  renderMenu('all');
-  updateCartUI();
-
-  // Particles
-  const hero = document.getElementById('hero');
-  const colors = ['#c9a84c','#fff6d6','#f5e099','#ffe066'];
-  for (let i = 0; i < 28; i++) {
-    const p = document.createElement('div');
-    p.className = 'particle';
-    const size = Math.random() * 6 + 2;
-    p.style.cssText = `
-      width:${size}px;height:${size}px;
-      left:${Math.random()*100}%;
-      background:${colors[Math.floor(Math.random()*colors.length)]};
-      animation-duration:${6 + Math.random()*10}s;
-      animation-delay:${Math.random()*8}s;
-    `;
-    hero.appendChild(p);
-  }
-
-  // Navbar scroll
-  const navbar = document.getElementById('navbar');
-  window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 60);
-  });
-
-  // Intersection observer for highlight cards
-  const cards = document.querySelectorAll('.highlight-card');
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach((e, i) => {
-      if (e.isIntersecting) {
-        setTimeout(() => e.target.classList.add('visible'), i * 120);
-        obs.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.15 });
-  cards.forEach(c => obs.observe(c));
-
-  // Menu tabs
-  const tabBtns = document.querySelectorAll('.tab-btn');
-  tabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      tabBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderMenu(btn.dataset.cat);
-    });
-  });
-
-  // Reviews slider
-  const track = document.getElementById('reviewsTrack');
-  const slides = track.querySelectorAll('.review-slide');
-  const dotsContainer = document.getElementById('reviewsNav');
-  let current = 0;
-
-  slides.forEach((_, i) => {
-    const dot = document.createElement('div');
-    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
-    dot.addEventListener('click', () => goTo(i));
-    dotsContainer.appendChild(dot);
-  });
-
-  function goTo(idx) {
-    current = idx;
-    const slideW = slides[0].offsetWidth + 24;
-    track.style.transition = 'transform .5s cubic-bezier(.4,0,.2,1)';
-    track.style.transform = `translateX(-${idx * slideW}px)`;
-    document.querySelectorAll('.nav-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
-  }
-
-  setInterval(() => goTo((current + 1) % slides.length), 4000);
-</script>
-</body>
-</html>
+  .checkout-textarea:focus { outline: none; border-color: var(--gold); }
+  .checkout-textarea::placeholder { color: rgba(255,255,255,.3); }
+
+  .payment-option {
+    display: flex; align-items: center; gap: 12px; padding: 16px;
+    border: 1.5px solid var(--gold);
